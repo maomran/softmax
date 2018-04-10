@@ -14,24 +14,20 @@ module softmax(
 		);
 
 reg [`DATALENGTH-1:0]	Dataout;
-reg	[`DATALENGTH-1:0] 	LocalBuffer[`INPUTMAX-1:0];
+reg [`DATALENGTH-1:0] 	LocalBuffer[`INPUTMAX-1:0];
 reg [`INPUTMAX-1:0] 	Counter;
-reg [2:0] 				CurrentState;
-reg [2:0] 				NextState;
+reg [1:0] 				CurrentState;
+reg [1:0] 				NextState;
 
 always @(posedge Clock or negedge Reset) begin
 	if (Reset) begin
 		// reset
 		LocalBuffer <= 0;
 		Counter <= 0;
-		CurrentState <= `IDLE;
+		NextState <= `IDLE;
 	end
-	else
-		CurrentState <= NextState;
-end
-
-always @(posedge Clock) begin
-	case(CurrentState) begin
+	else begin
+	case(NextState) begin
 		
 		`IDLE: begin
 			NextState <= `INPUTSTREAM;	
@@ -41,20 +37,21 @@ always @(posedge Clock) begin
 			if (Counter<=N) begin
 				LocalBuffer[Counter] <= Datain;
 				Counter <= Counter + 1;
-		end
+			end
 			else begin
 				NextState <= `OP;
 			end		
-			end
+		end
 
 		`OP: begin
 		
 			end
-		else begin
+		default: begin
 			NextState <= `IDLE;
 		end
 
 
+	end
 	end
 end
 	
