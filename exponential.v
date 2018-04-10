@@ -5,29 +5,23 @@
 `define INPUTSTREAM 	2'b01
 `define OP 				2'b10
 module exponential (
-		input 	wire 						Clock,
-		input 	wire 						Reset,
-		input		    [`DATALENGTH-1:0] 	Datain,
-		output  reg		[`DATALENGTH-1:0]	DataOut
+		input 	wire 				Clock,
+		input 	wire				Reset,
+		input	    	[`DATALENGTH-1:0] 	Datain,
+		output  reg	[`DATALENGTH-1:0]	DataOut
 	
 );
-
-reg [`DATALENGTH-1:0]	T0,T1,T2, Ts, Tc;
+wire [`DATALENGTH-1:0] one, six;
+reg [`DATALENGTH-1:0]	T0,T1,T2,Ts,Td,Tc;
 wire wa_add_1,wb_add_1,wz_add_1;
 wire wa_add_2,wb_add_2,wz_add_2;
 wire wa_add_3,wb_add_3,wz_add_3;
-
 wire wa_mul_1,wb_mul_1,wz_mul_1;
 wire wa_mul_2,wb_mul_2,wz_mul_2;
+wire wa_div_1,wb_div_1,wz_div_1;
 
 assign one = 32'h3f800000;
-
-		T0 <= Datain;
-		// T1 <= T0 + 1 ;
-		// Ts <= T0 * T0;
-		T2 <= T1 + (Ts >> 2);
-		Tc <= Ts* T0; 
-		DataOut <= T2 + (Tc /6);
+assign six = 32'h40c00000 ;
 
 adder A1 (        
         one,
@@ -50,62 +44,79 @@ multiplier Ms (
         Clock,
         Reset,
         Ts,
-        ,
-        input_a_ack,
-        input_b_ack);
+        wz_mul_1,
+        wb_mul_2,
+        wa_mul_1);
+
 adder A2 (        
-        input_a,
-        input_b,
-        1,
-        1,
-        1,
+        T1,
+        Ts >> 2,
+        wa_mul_1,
+        wb_mul_1,
+        wz_mul_1,
         Clock,
         Reset,
-        output_z,
-        output_z_stb,
-        input_a_ack,
-        input_b_ack);
-adder A3 (        
-        input_a,
-        input_b,
-        1,
-        1,
-        1,
-        Clock,
-        Reset,
-        output_z,
-        output_z_stb,
-        input_a_ack,
-        input_b_ack);
+        T2,
+        wz_add_2,
+        wa_add_2,
+        wb_add_2);
 
 multiplier Mc (        
-        input_a,
-        input_b,
-        1,
-        1,
-        1,
+        Ts,
+        Ts,
+        wa_add_2,
+        wb_add_2,
+        wz_add_2,
         Clock,
         Reset,
-        output_z,
-        output_z_stb,
-        input_a_ack,
-        input_b_ack);
+        Tc,
+        wz_mul_2,
+        wa_mul_2,
+        wb_mul_2);
 
-always @(posedge Clock or negedge Reset) begin : proc_
+divider D1 (
+        Tc,
+        six,
+        wa_mul_2,
+        wb_mul_2,
+        wz_mul_2,
+        Clock,
+        Reset,
+        Td,
+        wz_div_1,
+        wa_div_1,
+        wb_div_1
+        );
+
+adder A3 (        
+        Td,
+        T2,
+        wa_div_1,
+        wb_div_1,
+        wz_div_1,
+        Clock,
+        Reset,
+        DataOut,
+        wz_add_3,
+        wa_add_3,
+        wb_add_3);
+
+always @(posedge Clock or negedge Reset) begin 
 	if(~Reset) begin
+                T0 <= 0;
+                T1 <= 0;
+                T2 <= 0;
+                Ts <= 0;
+                Tc <= 0;
+                Td <= 0;
 		DataOut <= 0;
-		T0 <= 0;
-		T1 <= 0;
-		T2 <= 0;
-		Ts <= 0;
-		Tc <= 0;
 	end else begin
 		T0 <= Datain;
 		// T1 <= T0 + 1 ;
 		// Ts <= T0 * T0;
-		T2 <= T1 + (Ts >> 2);
-		Tc <= Ts* T0; 
-		DataOut <= T2 + (Tc /6);
+		// T2 <= T1 + (Ts >> 2);
+		// Tc <= Ts* T0; 
+		// DataOut <= T2 + (Tc /6);
 
 	end
 end
