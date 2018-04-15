@@ -26,12 +26,12 @@ module divider(
   input     input_b_stb;
   output    input_b_ack;
 
-  output    [31:0] output_z;
+  output reg    [31:0] output_z;
   output    output_z_stb;
   input     output_z_ack;
 
   reg       s_output_z_stb;
-  reg       [31:0] s_output_z;
+  // reg       [31:0] output_z;
   reg       s_input_a_ack;
   reg       s_input_b_ack;
 
@@ -62,6 +62,25 @@ module divider(
 
   always @(posedge clk)
   begin
+        if (rst == 1) begin
+      state <= get_a;
+      s_input_a_ack <= 0;
+      s_input_b_ack <= 0;
+      s_output_z_stb <= 0;
+      output_z <= 0;
+      a <= 0;
+      b <= 0;
+      z <= 0;
+      a_m <= 0;
+      b_m <= 0;
+      z_m <= 0;
+      a_e <= 0;
+      b_e <= 0;
+      z_m <= 0;
+
+
+    end
+    else begin
 
     case(state)
 
@@ -290,7 +309,7 @@ module divider(
       put_z:
       begin
         s_output_z_stb <= 1;
-        s_output_z <= z;
+        output_z <= z;
         if (s_output_z_stb && output_z_ack) begin
           s_output_z_stb <= 0;
           state <= get_a;
@@ -299,18 +318,12 @@ module divider(
 
     endcase
 
-    if (rst == 1) begin
-      state <= get_a;
-      s_input_a_ack <= 0;
-      s_input_b_ack <= 0;
-      s_output_z_stb <= 0;
-    end
-
+  end
   end
   assign input_a_ack = s_input_a_ack;
   assign input_b_ack = s_input_b_ack;
   assign output_z_stb = s_output_z_stb;
-  assign output_z = s_output_z;
+  // assign output_z = output_z;
 
 endmodule
 

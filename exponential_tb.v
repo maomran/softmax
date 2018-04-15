@@ -8,25 +8,26 @@ module exponential_tb ();
 
 reg 						Clock;
 reg 						Reset;
+reg 						Str;
 reg  [`DATALENGTH-1:0] 	Datain;
 wire [`DATALENGTH-1:0]	DataOut;
+wire					Ack;
 
 
-exponential DUT (Clock, Reset, Datain, DataOut);
+exponential DUT (Clock, Reset,Str, Datain ,Ack, DataOut);
 	
 initial begin
 	Clock = 0;
-	Reset = 0;
-	#10
 	Reset = 1;
-	@( negedge Clock) begin
-	Datain = 32'd1;
+	Str   = 0;
 	#10
-	Datain = -32'd4;
+	Reset = 0;
+	Str	  = 1;
+	Datain = 32'h3f800000;
 	#50 
 	$finish;
 end
-end
+
 always 
 #1 Clock = ~Clock;
 
