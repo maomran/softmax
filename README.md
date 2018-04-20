@@ -11,5 +11,5 @@ Taylor series approximation is used to calculate exponential which is donated as
     f(x) = e^x = 1 + x/1! + x^2/2! + x^3/3! + ....
     
 ### Implementation Block:
- ![Block Diagram](waveform/CAPTURE.PNG)
+ ![Block Diagram](waveform/Capture.PNG)
 
