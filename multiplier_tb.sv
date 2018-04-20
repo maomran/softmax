@@ -38,8 +38,8 @@ initial begin
   // input_b_stb = 1;
   // output_z_ack = 1;
   // #5 
-  input_a = 32'h3e19999a;
-  input_b = 32'hbe19999a;
+  input_a = 32'h3f000000;
+  input_b = 32'hbf000000;
   #80
 //     input_a_stb = 0;  
 //   input_b_stb = 0;
@@ -51,7 +51,7 @@ initial begin
   // output_z_ack = 1;
   // #5
   input_a = 32'h3f000000;
-  input_b = 32'h3f000000;
+  input_b = 32'h3f800000;
 end
 
 multiplier DUT (        

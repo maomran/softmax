@@ -27,9 +27,14 @@ initial begin
 	#10
 	Start = 1;
 	Reset = 0;
-	@(negedge Clock) begin		
 	Datain = 32'h3f800000;
-	end
+	#2
+	Datain = 32'h3f800000;
+    #2
+    Datain = 32'h3f800000;            
+    #2
+    Datain = 32'h3f800000;          
+	
 	Start = 0;
 	#2000 
 	$finish;

@@ -147,7 +147,7 @@ always @(posedge Clock or negedge Reset) begin
 		end
 
 		`INPUTSTREAM: begin
-			if (Counter < N) begin
+			if (Counter <= N) begin
 				InputBuffer[Counter] <= Datain;
 				Counter <= Counter + 1;
 				NextState <= `INPUTSTREAM;
@@ -160,7 +160,7 @@ always @(posedge Clock or negedge Reset) begin
 
 		`EXP: begin
 				if(Ack == 4'b1111)begin 
-				for (m = 0; m < N;m = m+1)
+				for (m = 0; m <= N;m = m+1)
            		DivBuffer[m] <=  InputBuffer_w[m];
 	     		NextState <= `ADD;
 	     		Str_Add_a <= 1 ;
