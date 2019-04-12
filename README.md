@@ -2,9 +2,8 @@
 Softmax is a non-linear logistic function commonly used in neural network circuits.
 
 Softmax is denoted with the following equation.
- ![Softmax equation](waveform/smax.png)
 
-Softmax squashes input between 0,1. 
+![Softmax equation](waveform/smax.png)
 ### Softmax graph
  ![Softmax graph](waveform/graph.PNG)
 Taylor series approximation is used to calculate exponential which is donated as follow: 
