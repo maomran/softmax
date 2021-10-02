@@ -18,7 +18,7 @@ wire [`DATALENGTH-1:0] Dataout;
 
 
 
-softmax DUT (Clock, Reset, Start, Datain,N, DataOut);
+	softmax DUT (Clock, Reset, Start, Datain,N, Dataout);
 	
 initial begin
 	Clock = 1;
