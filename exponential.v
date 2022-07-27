@@ -80,7 +80,7 @@ adder A2 (
         wb_add_2);
 
 multiplier Mc (        
-        Ts,
+        T0,
         Ts,
         wa_add_2,
         wb_add_2,
